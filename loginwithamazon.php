@@ -17,8 +17,6 @@ defined('ABSPATH') or die('Access denied');
 define('LOGINWITHAMAZON__PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 define('LOGINWITHAMAZON__PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
-add_option('loginwithamazon_client_id', '', '', 'yes');
-
 if ( is_admin() ) {
     require_once LOGINWITHAMAZON__PLUGIN_DIR . 'options.php';
 }
@@ -27,4 +25,9 @@ require_once LOGINWITHAMAZON__PLUGIN_DIR . 'utility.php';
 require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_button.php';
 require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_process.php';
 
+register_activation_hook( __FILE__, 'loginwithamazon_install' );
 add_filter( 'registration_errors', array('LoginWithAmazonUtility', 'registrationErrors'), 1, 3 );
+
+function loginwithamazon_install() {
+    add_option('loginwithamazon_client_id', '', '', 'yes');
+}

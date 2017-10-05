@@ -9,7 +9,7 @@
  */
 defined('ABSPATH') or die('Access denied');
 
-if(get_option('loginwithamazon_client_id') && get_option('loginwithamazon_client_id') != '') {
+if( (string) get_option('loginwithamazon_client_id', '') ) {
     add_action('wp_enqueue_scripts', 'loginwithamazon_enqueue_script');
     add_action('login_enqueue_scripts', 'loginwithamazon_enqueue_script');
     add_action('wp_footer', 'loginwithamazon_add_footer_script');

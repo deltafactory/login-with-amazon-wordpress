@@ -99,7 +99,7 @@ class LoginWithAmazonUtility {
      */
     public static function getEmailFromAccessToken($accessToken) {
         $result = self::json_curl_wrapper('https://api.amazon.com/auth/o2/tokeninfo?access_token=' . urlencode($accessToken));
-        if (!isset($result['aud']) || $result['aud'] != get_option('loginwithamazon_client_id')) {
+        if (!isset($result['aud']) || $result['aud'] != get_option('loginwithamazon_client_id', '')) {
             return false;
         }
 

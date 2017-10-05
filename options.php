@@ -28,7 +28,7 @@ function loginwithamazon_settings_page() {
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Client ID</th>
-                    <td><input type="text" name="loginwithamazon_client_id" value="<?php echo esc_attr(get_option('loginwithamazon_client_id')); ?>" class="regular-text" /></td>
+                    <td><input type="text" name="loginwithamazon_client_id" value="<?php echo esc_attr(get_option('loginwithamazon_client_id', '')); ?>" class="regular-text" /></td>
                 </tr>
             </table>
             <?php submit_button(); ?>
