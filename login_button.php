@@ -24,13 +24,7 @@ function loginwithamazon_enqueue_script() {
         'logout' => (isset($_GET['loggedout']) && $_GET['loggedout'] == 'true'),
         'next_url' => str_replace('http://', 'https://', site_url('wp-login.php')) . '?amazonLogin=1'
     );
-/*
-    if ( !isset( $_COOKIE['loginwithamazon_nonce'] ) ) {
-        $config['nonce'] = LoginWithAmazonUtility::sessionNonce();
-        $config['cookiedomain'] = COOKIE_DOMAIN;
-        $config['cookiepath'] = COOKIEPATH;
-    }
-*/
+
     wp_localize_script( 'loginwithamazon', 'lwaConfig', $config );
 }
 
@@ -38,14 +32,7 @@ function loginwithamazon_add_footer_script() {
     ?>
     <div id="amazon-root"></div>
     <script type="text/javascript">
-/*
-        if ( lwaConfig.nonce ) {
-            document.cookie = 'loginwithamazon_nonce=' + encodeURIComponent( lwaConfig.nonce )
-                + ';path=' + lwaConfig.cookiepath
-                + ';domain=' + lwaConfig.cookiedomain
-                + ( lwaConfig.ssl ? ';secure' : '' );
-        }
-*/
+
         window.onAmazonLoginReady = function() {
             amazon.Login.setClientId( lwaConfig.client_id );
             amazon.Login.setUseCookie(true);

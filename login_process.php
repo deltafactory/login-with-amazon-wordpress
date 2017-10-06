@@ -9,8 +9,6 @@
  */
 defined('ABSPATH') or die('Access denied');
 
-add_action('login_init', 'amazon_login_process');
-
 function amazon_login_process() {
     if ( LoginWithAmazonUtility::shouldProcessAmazonLogin() || LoginWithAmazonUtility::shouldReregister() ) {
         $access_token = LoginWithAmazonUtility::getAcessToken();

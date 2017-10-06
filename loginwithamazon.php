@@ -26,11 +26,16 @@ if ( is_admin() ) {
 if( (string) get_option('loginwithamazon_client_id', '') ) {
     require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_button.php';
 }
-require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_process.php';
 
 register_activation_hook( __FILE__, 'loginwithamazon_install' );
 add_filter( 'registration_errors', array('LoginWithAmazonUtility', 'registrationErrors'), 1, 3 );
+add_action( 'login_init', 'loginwithamazon_login_process' );
 
 function loginwithamazon_install() {
     add_option('loginwithamazon_client_id', '', '', 'yes');
+}
+
+function loginwithamazon_login_process() {
+    require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_process.php';
+    amazon_login_process();
 }
