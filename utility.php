@@ -76,9 +76,7 @@ class LoginWithAmazonUtility {
         } else {
             $nonce = wp_generate_password(64);
             setcookie( $cookie, $nonce, 0, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
-            echo 'Setting cookie';
         }
-echo 'gotnonce';
         return $nonce;
     }
 
