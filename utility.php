@@ -65,7 +65,21 @@ class LoginWithAmazonUtility {
      * @return string
      */
     public static function getCsrfAuthenticator() {
-        return wp_create_nonce( self::$CSRF_AUTHENTICATOR_KEY );
+        $nonce = self::sessionNonce();
+        return wp_create_nonce( self::$CSRF_AUTHENTICATOR_KEY . $nonce );
+    }
+
+    public static function sessionNonce() {
+        $cookie = 'loginwithamazon_nonce';
+        if ( isset( $_COOKIE[$cookie] ) ) {
+            $nonce = $_COOKIE[$cookie];
+        } else {
+            $nonce = wp_generate_password(64);
+            setcookie( $cookie, $nonce, 0, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+            echo 'Setting cookie';
+        }
+echo 'gotnonce';
+        return $nonce;
     }
 
     /**

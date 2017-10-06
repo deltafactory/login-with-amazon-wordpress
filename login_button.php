@@ -9,35 +9,31 @@
  */
 defined('ABSPATH') or die('Access denied');
 
-if( (string) get_option('loginwithamazon_client_id', '') ) {
-    add_action('wp_enqueue_scripts', 'loginwithamazon_enqueue_script');
-    add_action('login_enqueue_scripts', 'loginwithamazon_enqueue_script');
-    add_action('wp_footer', 'loginwithamazon_add_footer_script');
-    add_action('login_footer', 'loginwithamazon_add_footer_script');
-}
+add_action('wp_enqueue_scripts', 'loginwithamazon_enqueue_script');
+add_action('login_enqueue_scripts', 'loginwithamazon_enqueue_script');
+add_action('wp_footer', 'loginwithamazon_add_footer_script');
+add_action('login_footer', 'loginwithamazon_add_footer_script');
 
 function loginwithamazon_enqueue_script() {
     wp_enqueue_script('loginwithamazon', LOGINWITHAMAZON__PLUGIN_URL . 'add_login.js');
+    wp_localize_script( 'loginwithamazon', 'lwaConfig', array(
+        'popup' => is_ssl(),
+        'csrf' => LoginWithAmazonUtility::hmac( LoginWithAmazonUtility::getCsrfAuthenticator() ),
+        'client_id' => get_option('loginwithamazon_client_id'),
+        'logout' => (isset($_GET['loggedout']) && $_GET['loggedout'] == 'true'),
+        'next_url' => str_replace('http://', 'https://', site_url('wp-login.php')) . '?amazonLogin=1'
+    ));
 }
 
 function loginwithamazon_add_footer_script() {
-    $popup = 'false';
-    if(!empty($_SERVER['HTTPS'])) {
-        $popup = 'true';
-    }
-
-    $csrf = LoginWithAmazonUtility::hmac( LoginWithAmazonUtility::getCsrfAuthenticator() );
-
     ?>
     <div id="amazon-root"></div>
     <script type="text/javascript">
 
         window.onAmazonLoginReady = function() {
-            amazon.Login.setClientId('<?php echo get_option('loginwithamazon_client_id'); ?>');
+            amazon.Login.setClientId( lwaConfig.client_id );
             amazon.Login.setUseCookie(true);
-            <?php if(isset($_GET['loggedout']) && $_GET['loggedout'] == 'true'): ?>
-            amazon.Login.logout();
-            <?php endif; ?>
+            lwaConfig.logout && amazon.Login.logout();
         };
         (function(d) {
             var a = d.createElement('script'); a.type = 'text/javascript';
@@ -50,10 +46,10 @@ function loginwithamazon_add_footer_script() {
             document.getElementById(elementId).onclick = function() {
                 var options = {
                     scope: 'profile',
-                    state: '<?php echo $csrf; ?>',
-                    popup: <?php echo $popup; ?>
+                    state: lwaConfig.csrf,
+                    popup: lwaConfig.popup
                 };
-                amazon.Login.authorize(options, '<?php echo str_replace('http://', 'https://', site_url('wp-login.php')); ?>?amazonLogin=1');
+                amazon.Login.authorize(options, lwaConfig.next_url);
 
                 return false;
             };
