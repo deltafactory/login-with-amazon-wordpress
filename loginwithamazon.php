@@ -17,12 +17,15 @@ defined('ABSPATH') or die('Access denied');
 define('LOGINWITHAMAZON__PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 define('LOGINWITHAMAZON__PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
+require_once LOGINWITHAMAZON__PLUGIN_DIR . 'utility.php';
+
 if ( is_admin() ) {
     require_once LOGINWITHAMAZON__PLUGIN_DIR . 'options.php';
 }
 
-require_once LOGINWITHAMAZON__PLUGIN_DIR . 'utility.php';
-require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_button.php';
+if( (string) get_option('loginwithamazon_client_id', '') ) {
+    require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_button.php';
+}
 require_once LOGINWITHAMAZON__PLUGIN_DIR . 'login_process.php';
 
 register_activation_hook( __FILE__, 'loginwithamazon_install' );
